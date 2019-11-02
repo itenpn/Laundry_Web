@@ -9,27 +9,64 @@ export class LaundryList extends Component {
   }
 
   componentDidMount() {
-    this.populateWeatherData();
+      this.populateWeatherData();
+
   }
 
-  static renderForecastsTable(forecasts) {
+  static calcRemainingTime(strData, mTimer,mStatus) {
+
+      var date1 = new Date(strData);
+
+     // var hleft = Date.getHour() - date1.getHour();
+     // var minleft = Date.getMinutes() - date1.getMinutes;
+
+     // if (hleft < 0) {
+
+     // }
+
+      var hours = new Date().getHours(); //Current Hours
+      var min = new Date().getMinutes(); //Current Minutes
+
+      var ogMins = date1.getHours() * 60 + date1.getMinutes();
+      var curMins = hours * 60 + min;
+
+      var timePassed = curMins - ogMins;
+
+      if (timePassed < 0) {
+          curMins = curMins + 1440;
+
+          timePassed = curMins - ogMins;
+      }
+
+      var timeRemaining = mTimer - timePassed;
+
+      if (timeRemaining < 0 || mStatus.localeCompare("open")==0) {
+          timeRemaining = 0;
+      }
+
+      return timeRemaining;
+
+  }
+
+  static renderForecastsTable(laundryData) {
     return (
       <table className='table table-striped' aria-labelledby="tabelLabel">
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
+            <th>Washer ID</th>
+            <th>Time Remaining</th>
+            <th>Status</th>
+
           </tr>
         </thead>
-        <tbody>
-          {forecasts.map(forecast =>
-            <tr key={forecast.date}>
-              <td>{forecast.date}</td>
-              <td>{forecast.temperatureC}</td>
-              <td>{forecast.temperatureF}</td>
-              <td>{forecast.summary}</td>
+            <tbody>
+                {laundryData.map(laundryData =>
+                    <tr key={laundryData.machineNumber}>
+                        <td>{laundryData.machineNumber}</td>
+                        <td>{LaundryList.calcRemainingTime(laundryData.date, laundryData.timeSet, laundryData.available)}</td>
+                        <td>{laundryData.available}</td>
+              
+              
             </tr>
           )}
         </tbody>
@@ -56,4 +93,5 @@ export class LaundryList extends Component {
     const data = await response.json();
     this.setState({ forecasts: data, loading: false });
   }
+    
 }

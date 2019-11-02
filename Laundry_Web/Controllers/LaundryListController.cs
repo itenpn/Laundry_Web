@@ -25,8 +25,8 @@ namespace Laundry_Web.Controllers
             return Enumerable.Range(1, 15).Select(index => new LaundryList
             {
                 MachineNumber = index,
-                Date = DateTime.Now.AddMinutes(rng.Next(-40, 0)).ToString(),
-                TimeSet = rng.Next(10, 60),
+                Date = DateTime.Now.AddMinutes(-35).ToString(),
+                TimeSet = 40,
                 Available = "closed"
             }).ToArray();
         }

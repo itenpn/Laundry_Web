@@ -12,9 +12,11 @@ export class LaundryList extends Component {
         this.populateLaundryData();
     }
 
-    static handleClick(mnum) {
-        LaundryList.storeLaundryData(mnum, 30, "closed");
-        window.location.reload();
+    static handleClick(mnum, available) {
+        if (available.localeCompare("open") === 0) {
+            LaundryList.storeLaundryData(mnum, 30, "closed");
+            window.location.reload();
+        }
     }
 
     static storeLaundryData(machinenum, timeset, available) {
@@ -77,7 +79,7 @@ export class LaundryList extends Component {
                         return (
                             <tr key={laundryData.machineNumber}>
                                 <td><button id={laundryData.machineNumber}
-                                    onClick={LaundryList.handleClick.bind(this, laundryData.machineNumber)}>
+                                    onClick={LaundryList.handleClick.bind(this, laundryData.machineNumber, laundryData.available)}>
                                     Reserve</button>
                                 </td>
                                 <td>{laundryData.machineNumber}</td>
